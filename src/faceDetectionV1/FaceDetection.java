@@ -15,6 +15,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
@@ -27,6 +28,7 @@ import org.opencv.objdetect.CascadeClassifier;
 public class FaceDetection {
     
     private CascadeClassifier cascadeClassifier;
+    public static int numberOfFacesDetected;
     
     public FaceDetection(){
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -36,15 +38,18 @@ public class FaceDetection {
         Mat image = Imgcodecs.imread(file.getAbsolutePath(),Imgcodecs.CV_LOAD_IMAGE_COLOR);
         
         MatOfRect facedetections = new MatOfRect();
-        cascadeClassifier.detectMultiScale(image, facedetections);
-        
-        for(Rect rect: facedetections.toArray()){
-            Imgproc.rectangle(image,new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height), new Scalar(100,100,250),10);
+        cascadeClassifier.detectMultiScale(image, facedetections, 1.1,3,10,new Size(10,10),new Size(500,500));
+        Rect rcd[] = facedetections.toArray();
+        //for(Rect rect: facedetections.toArray()){
+        for(int i=0;i<rcd.length;i++){
+            //Imgproc.rectangle(image,new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height), new Scalar(0,999,0),1);
+            Imgproc.rectangle(image,new Point(rcd[i].x,rcd[i].y), new Point(rcd[i].x+rcd[i].width,rcd[i].y+rcd[i].height), new Scalar(0,999,0),1);
+            numberOfFacesDetected++;
+            
         }
         
         BufferedImage bufferedImage = convertMatToImage(image);
-        imagePanel.updateImage(bufferedImage);
-        
+        imagePanel.updateImage(bufferedImage);        
         
     }
 
@@ -63,5 +68,7 @@ public class FaceDetection {
         System.arraycopy(bytes, 0, targetsize, 0, bytes.length);
         return image;
     }
-    
+    public int getNumberOfFaces(){
+        return numberOfFacesDetected;
+    }
 }

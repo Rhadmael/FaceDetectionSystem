@@ -25,7 +25,7 @@ public class FaceDetectionV10 {
         catch(ClassNotFoundException |InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e){
             e.printStackTrace();
         }
-        
+        /*
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -33,6 +33,9 @@ public class FaceDetectionV10 {
                 new MainFrame();
             }
         });
+                */
+        CamINterface c1 = new CamINterface();
+        c1.DisplayScreen();
     }
     
 }
